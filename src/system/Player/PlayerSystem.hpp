@@ -23,12 +23,6 @@
 
 namespace game {
 
-    struct DirectionData {
-        sf::Keyboard::Key key;
-        float vx, vy;
-        int direction;
-    };
-
     class PlayerSystem : public ASystem {
         public:
             PlayerSystem();
@@ -39,15 +33,15 @@ namespace game {
 
             void setDirection(ControllableComponent &controllable);
 
+            int getNbPellets() const;
+
             void update() final;
 
         protected:
+        private:
             int _animTime;
             int _nbPellets;
-        private:
-            DirectionData _dir;
-            std::array<bool, 4> _isWall{};
-            pos _pos{};
+            int _direction;
     };
 
 }
