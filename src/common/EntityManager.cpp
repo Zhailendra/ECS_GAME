@@ -36,11 +36,11 @@ namespace game {
         return obj;
     }
 
-    void EntityManager::destroyEntity(const std::shared_ptr<std::vector<std::shared_ptr<Entity>>> &, std::uint32_t entityToDestroy) {
-        for (size_t size = 0; size < _entities->size(); size++) {
-            std::shared_ptr<Entity> &entity = _entities->at(size);
+    void EntityManager::destroyEntity(const std::shared_ptr<std::vector<std::shared_ptr<Entity>>> &entities, std::uint32_t entityToDestroy) {
+        for (size_t size = 0; size < entities->size(); size++) {
+            std::shared_ptr<Entity> &entity = entities->at(size);
             if (entity->getId() == entityToDestroy) {
-                _entities->erase(_entities->begin() + size);
+                entities->erase(entities->begin() + size);
                 return;
             }
         }
@@ -63,7 +63,7 @@ namespace game {
         return _availableEntities;
     }
 
-    std::shared_ptr<Entity> EntityManager::createPlayer(const pos &playerPos, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map) {
+    std::shared_ptr<Entity> EntityManager::createPlayer(const pos &playerPos) {
         std::shared_ptr<Entity> player = createEntity();
 
         player->addComponent<PositionComponent>(PositionComponent(playerPos.x, playerPos.y));
@@ -74,8 +74,6 @@ namespace game {
                                                                           sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right));
 
         auto &sprite = player->getComponent<RenderableComponent>().getSprite();
-        auto &con = player->getComponent<ControllableComponent>();
-        con.setMap(map);
         player->getComponent<PositionComponent>().positionCallback([&sprite] (double x, double y) {
             sprite.setPosition(static_cast<float>(x), static_cast<float>(y));
         });

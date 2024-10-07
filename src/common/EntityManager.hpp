@@ -34,13 +34,13 @@ namespace game {
             ~EntityManager() = default;
 
             std::shared_ptr<Entity> createEntity();
-            void destroyEntity(const std::shared_ptr<std::vector<std::shared_ptr<Entity>>>&, std::uint32_t entityToDestroy);
+            static void destroyEntity(const std::shared_ptr<std::vector<std::shared_ptr<Entity>>>&, std::uint32_t entityToDestroy);
 
             std::shared_ptr<Entity> getEntity(std::uint32_t entityId) const;
             std::shared_ptr<std::vector<std::shared_ptr<Entity>>> getEntity() const;
             std::queue<std::uint32_t> getAvailableEntities() const;
 
-            std::shared_ptr<Entity> createPlayer(const pos &playerPos, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map);
+            std::shared_ptr<Entity> createPlayer(const pos &playerPos);
             std::shared_ptr<Entity> createWall(const pos &wallPos, sf::IntRect rect);
             std::shared_ptr<Entity> createPellet(const pos &pelletPos, sf::IntRect rect);
             std::shared_ptr<Entity> createEnergizer(const pos &energizerPos, sf::IntRect rect);

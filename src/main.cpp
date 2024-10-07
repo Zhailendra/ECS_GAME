@@ -28,7 +28,7 @@ int main()
     game::EntityManager entityManager;
     game::Game game(entityManager);
     game.createMap(map.getMap(), map.isWallUp(), map.isWallDown(), map.isWallRight(), map.isWallLeft());
-    entityManager.createPlayer(map.getPlayerPos(), map.getMap());
+    entityManager.createPlayer(map.getPlayerPos());
 
     std::shared_ptr<std::vector<sf::Event>> events = std::make_shared<std::vector<sf::Event>>();
 
@@ -63,6 +63,7 @@ int main()
             hitboxSystem.update();
             playerSystem.update();
             movableSystem.update();
+            game.checkPellets();
             game.draw();
         }
     } catch (const game::Error &e) {

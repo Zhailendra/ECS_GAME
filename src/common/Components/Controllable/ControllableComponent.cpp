@@ -38,10 +38,6 @@ namespace game {
         this->_canMove = canMove;
     }
 
-    void ControllableComponent::setMap(std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map) {
-        this->_map = map;
-    }
-
     void ControllableComponent::setIsWall(std::array<bool, 4> isWall) {
         this->_isWall = isWall;
     }
@@ -60,10 +56,6 @@ namespace game {
 
     std::array<bool, 4> ControllableComponent::getIsWall() const {
         return this->_isWall;
-    }
-
-    std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> ControllableComponent::getMap() const {
-        return this->_map;
     }
 
 }

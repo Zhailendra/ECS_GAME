@@ -29,6 +29,10 @@ namespace game {
             static void resetWalls(bool &isWallUp, bool &isWallDown, bool &isWallRight, bool &isWallLeft);
             void drawHitBox(const std::shared_ptr<Entity>& entity);
 
+            void checkPellets();
+            void resetGame();
+            void displayWinMenu();
+
             sf::RenderWindow &getWindow() { return _window; }
             sf::Event &getEvent() { return _event; }
             sf::Clock &getClock() { return _clock; }
@@ -44,6 +48,10 @@ namespace game {
             sf::VideoMode _videoMode;
             sf::Event _event;
             sf::Clock _clock;
+
+            int _nbPellets;
+            int _nbPelletsRemaining;
+            int _nbEnergizers;
 
             EntityManager &_entityManager;
     };

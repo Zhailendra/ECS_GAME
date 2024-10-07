@@ -19,6 +19,7 @@
 #include "Energizers/EnergizersComponent.hpp"
 #include "Door/DoorComponent.hpp"
 #include "Map.hpp"
+#include "EntityManager.hpp"
 
 namespace game {
 
@@ -33,7 +34,7 @@ namespace game {
 
             void checkPlayerHitbox(const std::shared_ptr<Entity> &entity);
 
-            bool verifyNextPos(double x, double y, const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> &map);
+            bool verifyNextPos(double x, double y, bool isPellet);
 
         protected:
         private:

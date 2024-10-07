@@ -9,7 +9,7 @@
 
 namespace game {
 
-    PlayerSystem::PlayerSystem() : _animTime(0), _nbPellets(0)
+    PlayerSystem::PlayerSystem() : _animTime(0)
     {
     }
 
@@ -19,6 +19,18 @@ namespace game {
 
     std::shared_ptr<std::vector<std::shared_ptr<Entity>>> PlayerSystem::getEntities() {
         return this->_entities;
+    }
+
+    void PlayerSystem::setDirection(ControllableComponent &controllable) {
+        if (sf::Keyboard::isKeyPressed(controllable.up)) {
+            !controllable.getIsWall()[1] ? _direction = 1 : 0;
+        } else if (sf::Keyboard::isKeyPressed(controllable.down)) {
+            !controllable.getIsWall()[3] ? _direction = 3 : 0;
+        } else if (sf::Keyboard::isKeyPressed(controllable.left)) {
+            !controllable.getIsWall()[2] ? _direction = 2 : 0;
+        } else if (sf::Keyboard::isKeyPressed(controllable.right)) {
+            !controllable.getIsWall()[0] ? _direction = 0 : 0;
+        }
     }
 
     void PlayerSystem::update() {
@@ -67,22 +79,6 @@ namespace game {
                 pos.setPos(PLAYER_SPEED - OBJECT_SIZE, pos.y);
             }
         }
-    }
-
-    void PlayerSystem::setDirection(ControllableComponent &controllable) {
-        if (sf::Keyboard::isKeyPressed(controllable.up)) {
-            !controllable.getIsWall()[1] ? _direction = 1 : 0;
-        } else if (sf::Keyboard::isKeyPressed(controllable.down)) {
-            !controllable.getIsWall()[3] ? _direction = 3 : 0;
-        } else if (sf::Keyboard::isKeyPressed(controllable.left)) {
-            !controllable.getIsWall()[2] ? _direction = 2 : 0;
-        } else if (sf::Keyboard::isKeyPressed(controllable.right)) {
-            !controllable.getIsWall()[0] ? _direction = 0 : 0;
-        }
-    }
-
-    int PlayerSystem::getNbPellets() const {
-        return _nbPellets;
     }
 
 }

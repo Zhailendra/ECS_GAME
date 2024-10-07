@@ -17,6 +17,10 @@ namespace game {
         _window.create(_videoMode, "Pacman", sf::Style::Close | sf::Style::Resize | sf::Style::Titlebar);
         _window.setView(sf::View(sf::FloatRect(0, 0, OBJECT_SIZE * MAP_WIDTH, FONT_SIZE + OBJECT_SIZE * MAP_HEIGHT)));
         _window.setFramerateLimit(60);
+        _debugMode = false;
+        _nbPellets = 0;
+        _nbPelletsRemaining = 0;
+        _nbEnergizers = 0;
     }
 
     Game::~Game() {}
@@ -60,9 +64,11 @@ namespace game {
                         break;
                     case Cell::PELLET:
                         _entityManager.createPellet(pos, sf::IntRect(0, OBJECT_SIZE, OBJECT_SIZE, OBJECT_SIZE));
+                        _nbPellets++;
                         break;
                     case Cell::ENERGIZER:
                         _entityManager.createEnergizer(pos, sf::IntRect(OBJECT_SIZE, OBJECT_SIZE, OBJECT_SIZE, OBJECT_SIZE));
+                        _nbEnergizers++;
                         break;
                     case Cell::DOOR:
                         _entityManager.createDoor(pos, sf::IntRect(2 * OBJECT_SIZE, OBJECT_SIZE, OBJECT_SIZE, OBJECT_SIZE));
@@ -92,6 +98,28 @@ namespace game {
         border.setOutlineColor(sf::Color::Red);
         border.setFillColor(sf::Color::Transparent);
         _window.draw(border);
+    }
+
+    void Game::resetGame() {
+
+    }
+
+    void Game::displayWinMenu() {
+        std::cout << "You won !" << std::endl;
+    }
+
+    void Game::checkPellets() {
+        int nbPellets = 0;
+        for (const auto &entity : *_entityManager.getEntity()) {
+            if (entity->hasComponent<PelletsComponent>()) {
+                nbPellets < _nbPellets ? nbPellets++ : 0;
+            }
+        }
+
+        _nbPelletsRemaining = nbPellets;
+        if (_nbPelletsRemaining == 0) {
+            displayWinMenu();
+        }
     }
 
 }

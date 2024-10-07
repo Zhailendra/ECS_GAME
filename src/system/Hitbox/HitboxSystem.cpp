@@ -29,7 +29,7 @@ namespace game {
         }
     }
 
-    bool HitboxSystem::verifyNextPos(double x, double y, const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> &map) {
+    bool HitboxSystem::verifyNextPos(double x, double y, bool isPellet) {
         bool isWall = false;
         double x1 = x / OBJECT_SIZE;
         double y1 = y / OBJECT_SIZE;
@@ -56,11 +56,29 @@ namespace game {
             }
 
             if (x2 < MAP_WIDTH && y2 < MAP_HEIGHT) {
-                for (const std::shared_ptr<Entity> &entity : *_entities) {
-                    if (entity->hasComponent<RenderableComponent>() && (entity->hasComponent<WallsComponent>() || entity->hasComponent<DoorComponent>()) && entity->hasComponent<PositionComponent>()) {
-                        auto &entityPos = entity->getComponent<PositionComponent>();
-                        if (x2 == (entityPos.x / OBJECT_SIZE) && y2 == (entityPos.y / OBJECT_SIZE)) {
-                            isWall = true;
+                for (size_t size = 0; size < _entities->size(); size++) {
+                    std::shared_ptr<Entity> &entity = _entities->at(size);
+                    if (!entity->hasComponent<RenderableComponent>() && !entity->hasComponent<PositionComponent>())
+                        continue;
+                    if (!isPellet) {
+                        if (entity->hasComponent<WallsComponent>() || entity->hasComponent<DoorComponent>()) {
+                            auto &entityPos = entity->getComponent<PositionComponent>();
+                            if (x2 == (entityPos.x / OBJECT_SIZE) && y2 == (entityPos.y / OBJECT_SIZE)) {
+                                isWall = true;
+                            }
+                        }
+                    } else {
+                        if (entity->hasComponent<PelletsComponent>()) {
+                            auto &entityPos = entity->getComponent<PositionComponent>();
+                            if (x2 == (entityPos.x / OBJECT_SIZE) && y2 == (entityPos.y / OBJECT_SIZE)) {
+                                EntityManager::destroyEntity(_entities, entity->getId());
+                            }
+                        } else if (entity->hasComponent<EnergizersComponent>()) {
+                            auto &entityPos = entity->getComponent<PositionComponent>();
+                            if (x2 == (entityPos.x / OBJECT_SIZE) && y2 == (entityPos.y / OBJECT_SIZE)) {
+                                EntityManager::destroyEntity(_entities, entity->getId());
+                                isWall = true;
+                            }
                         }
                     }
                 }
@@ -75,10 +93,13 @@ namespace game {
         auto &playerPos = player->getComponent<PositionComponent>();
         std::array<bool, 4> isWall = {false, false, false, false};
 
-        isWall[0] = verifyNextPos(playerPos.x + PLAYER_SPEED, playerPos.y, controllable.getMap());
-        isWall[1] = verifyNextPos(playerPos.x, playerPos.y - PLAYER_SPEED, controllable.getMap());
-        isWall[2] = verifyNextPos(playerPos.x - PLAYER_SPEED, playerPos.y, controllable.getMap());
-        isWall[3] = verifyNextPos(playerPos.x, playerPos.y + PLAYER_SPEED, controllable.getMap());
+        isWall[0] = verifyNextPos(playerPos.x + PLAYER_SPEED, playerPos.y, false);
+        isWall[1] = verifyNextPos(playerPos.x, playerPos.y - PLAYER_SPEED, false);
+        isWall[2] = verifyNextPos(playerPos.x - PLAYER_SPEED, playerPos.y, false);
+        isWall[3] = verifyNextPos(playerPos.x, playerPos.y + PLAYER_SPEED, false);
+        if (verifyNextPos(playerPos.x, playerPos.y, true)) {
+            std::cout << "Energizer eaten" << std::endl;
+        }
 
         controllable.setIsWall(isWall);
     }

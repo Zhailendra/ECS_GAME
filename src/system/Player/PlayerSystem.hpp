@@ -33,14 +33,11 @@ namespace game {
 
             void setDirection(ControllableComponent &controllable);
 
-            int getNbPellets() const;
-
             void update() final;
 
         protected:
         private:
             int _animTime;
-            int _nbPellets;
             int _direction;
     };
 

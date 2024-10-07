@@ -48,7 +48,6 @@ namespace game {
 
             pos _playerPos;
             std::array<pos, 4> _enemiesPos;
-            int _nbPellets;
 
             bool _isWallUp{};
             bool _isWallDown{};

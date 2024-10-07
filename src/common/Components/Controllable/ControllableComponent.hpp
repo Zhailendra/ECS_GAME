@@ -27,14 +27,12 @@ namespace game {
             void setDirection(int direction);
             void setLastDirection(int direction);
             void setCanMove(int canMove);
-            void setMap(std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map);
             void setIsWall(std::array<bool, 4> isWall);
 
             int getDirection() const;
             int getLastDirection() const;
             int getCanMove() const;
             std::array<bool, 4> getIsWall() const;
-            std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> getMap() const;
 
             sf::Keyboard::Key up;
             sf::Keyboard::Key down;
@@ -43,7 +41,6 @@ namespace game {
 
         protected:
             std::array<bool, 4> _isWall{};
-            std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> _map;
         private:
             int _direction;
             int _lastDirection;

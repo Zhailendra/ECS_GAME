@@ -18,4 +18,13 @@ namespace game {
     {
     }
 
+    int EnergizersComponent::getNbEnergizersEaten() const {
+        return _nbEnergizersEaten;
+    }
+
+    void EnergizersComponent::setNbEnergizersEaten(bool isEaten) {
+        if (isEaten)
+            _nbEnergizersEaten++;
+    }
+
 }
