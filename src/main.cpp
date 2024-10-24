@@ -19,6 +19,7 @@
 #include "Movable/MovableSystem.hpp"
 #include "Rectable/RectableSystem.hpp"
 #include "Hitbox/HitboxSystem.hpp"
+#include "Text/TextSystem.hpp"
 
 int main()
 {
@@ -28,6 +29,7 @@ int main()
     game::EntityManager entityManager;
     game::Game game(entityManager);
     game.createMap(map.getMap(), map.isWallUp(), map.isWallDown(), map.isWallRight(), map.isWallLeft());
+    game.initInfo();
     entityManager.createPlayer(map.getPlayerPos());
 
     std::shared_ptr<std::vector<sf::Event>> events = std::make_shared<std::vector<sf::Event>>();
@@ -36,13 +38,15 @@ int main()
     game::MovableSystem movableSystem = game::MovableSystem();
     game::RectableSystem rectableSystem = game::RectableSystem();
     game::HitboxSystem hitboxSystem = game::HitboxSystem();
+    game::TextSystem textSystem = game::TextSystem();
 
     playerSystem.setInputs(events);
 
-    playerSystem.setEntities(entityManager.getEntity());
-    movableSystem.setEntities(entityManager.getEntity());
-    rectableSystem.setEntities(entityManager.getEntity());
-    hitboxSystem.setEntities(entityManager.getEntity());
+    playerSystem.setEntities(entityManager.getEntities());
+    movableSystem.setEntities(entityManager.getEntities());
+    rectableSystem.setEntities(entityManager.getEntities());
+    hitboxSystem.setEntities(entityManager.getEntities());
+    textSystem.setEntities(entityManager.getEntities());
 
     try {
         while (game.isRunning()) {
@@ -57,13 +61,23 @@ int main()
                     game.setDebugMode(!game.getDebugMode());
                     continue;
                 }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+                    game.resetGame(map);
+                    playerSystem.setEntities(entityManager.getEntities());
+                    movableSystem.setEntities(entityManager.getEntities());
+                    rectableSystem.setEntities(entityManager.getEntities());
+                    hitboxSystem.setEntities(entityManager.getEntities());
+                    textSystem.setEntities(entityManager.getEntities());
+                    continue;
+                }
                 events->push_back(event);
             }
+            game.checkPellets();
             rectableSystem.update();
             hitboxSystem.update();
             playerSystem.update();
             movableSystem.update();
-            game.checkPellets();
+            textSystem.update();
             game.draw();
         }
     } catch (const game::Error &e) {

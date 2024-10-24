@@ -24,15 +24,11 @@ namespace game {
             ControllableComponent() { _type = Components::CONTROLLABLE; }
             ~ControllableComponent();
 
-            void setDirection(int direction);
-            void setLastDirection(int direction);
-            void setCanMove(int canMove);
             void setIsWall(std::array<bool, 4> isWall);
+            void setIsPlaying(bool isPlaying);
 
-            int getDirection() const;
-            int getLastDirection() const;
-            int getCanMove() const;
             std::array<bool, 4> getIsWall() const;
+            bool getIsPlaying() const;
 
             sf::Keyboard::Key up;
             sf::Keyboard::Key down;
@@ -42,9 +38,7 @@ namespace game {
         protected:
             std::array<bool, 4> _isWall{};
         private:
-            int _direction;
-            int _lastDirection;
-            int _canMove;
+            bool _isPlaying;
     };
 
 }

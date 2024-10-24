@@ -10,17 +10,20 @@
 #include <iostream>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <chrono>
+
 #include "EntityManager.hpp"
 #include "Renderable/RenderableComponent.hpp"
 #include "Map.hpp"
 
 namespace game {
+
     class Game {
         public:
             explicit Game(EntityManager &entityManager);
             ~Game();
 
-            bool isRunning() const;
+            bool isRunning();
             bool pollEvent() { return _window.pollEvent(_event); }
             void closeWindow() { _window.close(); }
             void draw();
@@ -29,9 +32,13 @@ namespace game {
             static void resetWalls(bool &isWallUp, bool &isWallDown, bool &isWallRight, bool &isWallLeft);
             void drawHitBox(const std::shared_ptr<Entity>& entity);
 
+
             void checkPellets();
-            void resetGame();
+            void resetGame(Map map);
+
             void displayWinMenu();
+
+            void initInfo();
 
             sf::RenderWindow &getWindow() { return _window; }
             sf::Event &getEvent() { return _event; }
@@ -43,16 +50,30 @@ namespace game {
 
         protected:
             bool _debugMode = false;
+            std::shared_ptr<Entity> _fpsEntity;
+            std::shared_ptr<Entity> _nbEntities;
+            std::shared_ptr<Entity> _winMenu;
+            std::shared_ptr<Entity> _levelInfo;
         private:
             sf::RenderWindow _window;
             sf::VideoMode _videoMode;
             sf::Event _event;
             sf::Clock _clock;
 
+            int _level;
             int _nbPellets;
             int _nbPelletsRemaining;
             int _nbEnergizers;
 
             EntityManager &_entityManager;
+
+            sf::Clock _fpsClock;
+            std::chrono::high_resolution_clock::time_point _start_point_fps;
+            std::chrono::high_resolution_clock::time_point _end_point_fps;
+            float _fps;
+
+            bool _playerDeathCreated;
+            bool _winMenuCreated;
     };
+
 }

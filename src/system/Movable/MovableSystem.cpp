@@ -32,6 +32,9 @@ namespace game {
             if (!entity->hasComponent<PositionComponent>() || !entity->hasComponent<VelocityComponent>() || entity->hasComponent<WallsComponent>() || entity->hasComponent<DoorComponent>() || entity->hasComponent<PelletsComponent>() || entity->hasComponent<EnergizersComponent>())
                 continue;
             if (entity->hasComponent<ControllableComponent>()) {
+                auto &controllable = entity->getComponent<ControllableComponent>();
+                if (!controllable.getIsPlaying())
+                    continue;
                 auto &pos = entity->getComponent<PositionComponent>();
                 auto &vel = entity->getComponent<VelocityComponent>();
                 pos.setPos(pos.x + vel.x, pos.y + vel.y);

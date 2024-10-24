@@ -23,6 +23,7 @@
 #include "Pellets/PelletsComponent.hpp"
 #include "Energizers/EnergizersComponent.hpp"
 #include "Door/DoorComponent.hpp"
+#include "Text/TextComponent.hpp"
 
 namespace game {
 
@@ -35,16 +36,22 @@ namespace game {
 
             std::shared_ptr<Entity> createEntity();
             static void destroyEntity(const std::shared_ptr<std::vector<std::shared_ptr<Entity>>>&, std::uint32_t entityToDestroy);
+            void clearEntities();
 
             std::shared_ptr<Entity> getEntity(std::uint32_t entityId) const;
-            std::shared_ptr<std::vector<std::shared_ptr<Entity>>> getEntity() const;
+            std::shared_ptr<std::vector<std::shared_ptr<Entity>>> getEntities() const;
             std::queue<std::uint32_t> getAvailableEntities() const;
 
+            size_t getSize() const;
+
             std::shared_ptr<Entity> createPlayer(const pos &playerPos);
+            std::shared_ptr<Entity> createPlayerDeath(const pos &playerPos);
             std::shared_ptr<Entity> createWall(const pos &wallPos, sf::IntRect rect);
             std::shared_ptr<Entity> createPellet(const pos &pelletPos, sf::IntRect rect);
             std::shared_ptr<Entity> createEnergizer(const pos &energizerPos, sf::IntRect rect);
             std::shared_ptr<Entity> createDoor(const pos &doorPos, sf::IntRect rect);
+
+            std::shared_ptr<Entity> createText(const pos &textPos, const std::string &text, const sf::Color &color, unsigned int size, bool display, bool displayNow);
 
         protected:
         private:

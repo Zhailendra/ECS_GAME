@@ -41,9 +41,17 @@ namespace game {
             auto &velocity = entity->getComponent<VelocityComponent>();
             auto &rect = entity->getComponent<RectableComponent>();
             auto &pos = entity->getComponent<PositionComponent>();
-
             rect.setFrameSpeed(std::floor(float(_animTime) / static_cast<float>(PLAYER_ANIM_SPEED)));
-            _animTime = (1 + _animTime) % (PLAYER_ANIM_FRAME * PLAYER_ANIM_SPEED);
+
+            if (controllable.getIsPlaying()) {
+                _animTime = (1 + _animTime) % (PLAYER_ANIM_FRAME * PLAYER_ANIM_SPEED);
+            } else {
+                if (_animTime < PLAYER_DEATH_FRAME * PLAYER_ANIM_SPEED) {
+                    _animTime++;
+                } else {
+                    displayWinText = true;
+                }
+            }
 
             setDirection(controllable);
 

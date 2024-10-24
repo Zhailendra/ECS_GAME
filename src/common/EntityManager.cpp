@@ -46,6 +46,21 @@ namespace game {
         }
     }
 
+    void EntityManager::clearEntities() {
+        auto newEntities = std::make_shared<std::vector<std::shared_ptr<Entity>>>();
+
+        for (const auto &entity : *_entities) {
+            if (!entity->hasComponent<TextComponent>()) {
+                _availableEntities.push(entity->getId());
+                continue;
+            }
+            newEntities->push_back(entity);
+        }
+
+        _entities = newEntities;
+    }
+
+
     std::shared_ptr<Entity> EntityManager::getEntity(std::uint32_t entityId) const {
         for (const auto &entity : *_entities) {
             if (entity->getId() == entityId) {
@@ -55,12 +70,16 @@ namespace game {
         return nullptr;
     }
 
-    std::shared_ptr<std::vector<std::shared_ptr<Entity>>> EntityManager::getEntity() const {
+    std::shared_ptr<std::vector<std::shared_ptr<Entity>>> EntityManager::getEntities() const {
         return _entities;
     }
 
     std::queue<std::uint32_t> EntityManager::getAvailableEntities() const {
         return _availableEntities;
+    }
+
+    size_t EntityManager::getSize() const {
+        return _entities->size();
     }
 
     std::shared_ptr<Entity> EntityManager::createPlayer(const pos &playerPos) {
@@ -80,6 +99,24 @@ namespace game {
         player->getComponent<PositionComponent>().setPos(playerPos.x, playerPos.y);
 
         return player;
+    }
+
+    std::shared_ptr<Entity> EntityManager::createPlayerDeath(const pos &playerPos) {
+        std::shared_ptr<Entity> playerDeath = createEntity();
+
+        playerDeath->addComponent<PositionComponent>(PositionComponent(playerPos.x, playerPos.y));
+        playerDeath->addComponent<RenderableComponent>(RenderableComponent(SpriteType::PLAYER_DEATH));
+        playerDeath->addComponent<VelocityComponent>(VelocityComponent(0, 0));
+        playerDeath->addComponent<RectableComponent>(RectableComponent(0));
+        playerDeath->addComponent<ControllableComponent>(ControllableComponent());
+
+        auto &sprite = playerDeath->getComponent<RenderableComponent>().getSprite();
+        playerDeath->getComponent<PositionComponent>().positionCallback([&sprite] (double x, double y) {
+            sprite.setPosition(static_cast<float>(x), static_cast<float>(y));
+        });
+        playerDeath->getComponent<PositionComponent>().setPos(playerPos.x, playerPos.y);
+
+        return playerDeath;
     }
 
     std::shared_ptr<Entity> EntityManager::createWall(const pos &wallPos, sf::IntRect rect) {
@@ -152,6 +189,19 @@ namespace game {
         door->getComponent<PositionComponent>().setPos(doorPos.x, doorPos.y);
 
         return door;
+    }
+
+    std::shared_ptr<Entity> EntityManager::createText(const pos &textPos, const std::string &text, const sf::Color &color, unsigned int size, bool display, bool displayNow) {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        auto distribution = std::uniform_int_distribution<std::uint32_t>(0, std::numeric_limits<std::uint32_t>::max());
+        std::shared_ptr<Entity> textEntity = std::make_shared<Entity>(Entity(distribution(gen)));
+
+        textEntity->addComponent(TextComponent(text, color, size));
+        textEntity->addComponent<PositionComponent>(PositionComponent(textPos.x, textPos.y));
+        textEntity->getComponent<TextComponent>().setDisplay(display);
+        textEntity->getComponent<TextComponent>().setDisplayNow(displayNow);
+        return textEntity;
     }
 
 }

@@ -30,14 +30,24 @@ namespace game {
     void RectableSystem::update()
     {
         for (auto & entity : *_entities) {
-            if (!entity->hasComponent<RenderableComponent>() || !entity->hasComponent<RenderableComponent>())
+            if (!entity->hasComponent<RenderableComponent>() || !entity->hasComponent<RectableComponent>())
                 continue;
             if (entity->hasComponent<WallsComponent>() || entity->hasComponent<PelletsComponent>() || entity->hasComponent<EnergizersComponent>() || entity->hasComponent<DoorComponent>())
                 continue;
-            auto &renderable = entity->getComponent<RenderableComponent>();
-            auto &rectable = entity->getComponent<RectableComponent>();
-            sf::Sprite &sprite = renderable.getSprite();
-            sprite.setTextureRect(sf::IntRect(OBJECT_SIZE * static_cast<int>(rectable.getFrameSpeed()), OBJECT_SIZE * rectable.getCurrentFrame(), OBJECT_SIZE,OBJECT_SIZE));
+            if (entity->hasComponent<ControllableComponent>()) {
+                auto &renderable = entity->getComponent<RenderableComponent>();
+                auto &rectable = entity->getComponent<RectableComponent>();
+                auto &controllable = entity->getComponent<ControllableComponent>();
+                sf::Sprite &sprite = renderable.getSprite();
+
+                if (controllable.getIsPlaying()) {
+                    sprite.setTextureRect(sf::IntRect(OBJECT_SIZE * static_cast<int>(rectable.getFrameSpeed()),
+                                                      OBJECT_SIZE * rectable.getCurrentFrame(), OBJECT_SIZE,
+                                                      OBJECT_SIZE));
+                } else {
+                    sprite.setTextureRect(sf::IntRect(OBJECT_SIZE * static_cast<int>(rectable.getFrameSpeed()), 0, OBJECT_SIZE, OBJECT_SIZE));
+                }
+            }
         }
     }
 

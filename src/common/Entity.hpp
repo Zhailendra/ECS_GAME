@@ -18,6 +18,8 @@
 
 namespace game {
 
+    extern bool displayWinText;
+
     class Entity {
         public:
             Entity(std::uint32_t id);

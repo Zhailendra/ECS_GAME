@@ -33,6 +33,7 @@ namespace game {
             void update() final;
 
             void checkPlayerHitbox(const std::shared_ptr<Entity> &entity);
+            void checker(int x, int y, bool &isWall, bool isPellet);
 
             bool verifyNextPos(double x, double y, bool isPellet);
 

@@ -56,32 +56,7 @@ namespace game {
             }
 
             if (x2 < MAP_WIDTH && y2 < MAP_HEIGHT) {
-                for (size_t size = 0; size < _entities->size(); size++) {
-                    std::shared_ptr<Entity> &entity = _entities->at(size);
-                    if (!entity->hasComponent<RenderableComponent>() && !entity->hasComponent<PositionComponent>())
-                        continue;
-                    if (!isPellet) {
-                        if (entity->hasComponent<WallsComponent>() || entity->hasComponent<DoorComponent>()) {
-                            auto &entityPos = entity->getComponent<PositionComponent>();
-                            if (x2 == (entityPos.x / OBJECT_SIZE) && y2 == (entityPos.y / OBJECT_SIZE)) {
-                                isWall = true;
-                            }
-                        }
-                    } else {
-                        if (entity->hasComponent<PelletsComponent>()) {
-                            auto &entityPos = entity->getComponent<PositionComponent>();
-                            if (x2 == (entityPos.x / OBJECT_SIZE) && y2 == (entityPos.y / OBJECT_SIZE)) {
-                                EntityManager::destroyEntity(_entities, entity->getId());
-                            }
-                        } else if (entity->hasComponent<EnergizersComponent>()) {
-                            auto &entityPos = entity->getComponent<PositionComponent>();
-                            if (x2 == (entityPos.x / OBJECT_SIZE) && y2 == (entityPos.y / OBJECT_SIZE)) {
-                                EntityManager::destroyEntity(_entities, entity->getId());
-                                isWall = true;
-                            }
-                        }
-                    }
-                }
+                checker(x2, y2, isWall, isPellet);
             }
         }
 
@@ -102,6 +77,39 @@ namespace game {
         }
 
         controllable.setIsWall(isWall);
+    }
+
+    void HitboxSystem::checker(int x, int y, bool &isWall, bool isPellet) {
+        std::vector<std::shared_ptr<Entity>> toRemove;
+
+        for (const auto &entity : *_entities) {
+            if (!entity->hasComponent<RenderableComponent>() && !entity->hasComponent<PositionComponent>())
+                continue;
+            if (!isPellet) {
+                if (entity->hasComponent<WallsComponent>() || entity->hasComponent<DoorComponent>()) {
+                    auto &entityPos = entity->getComponent<PositionComponent>();
+                    if (x == (entityPos.x / OBJECT_SIZE) && y == (entityPos.y / OBJECT_SIZE)) {
+                        isWall = true;
+                    }
+                }
+            } else {
+                if (entity->hasComponent<PelletsComponent>()) {
+                    auto &entityPos = entity->getComponent<PositionComponent>();
+                    if (x == (entityPos.x / OBJECT_SIZE) && y == (entityPos.y / OBJECT_SIZE)) {
+                        toRemove.push_back(entity);
+                    }
+                } else if (entity->hasComponent<EnergizersComponent>()) {
+                    auto &entityPos = entity->getComponent<PositionComponent>();
+                    if (x == (entityPos.x / OBJECT_SIZE) && y == (entityPos.y / OBJECT_SIZE)) {
+                        toRemove.push_back(entity);
+                        isWall = true;
+                    }
+                }
+            }
+        }
+        for (const auto &entity : toRemove) {
+            EntityManager::destroyEntity(_entities, entity->getId());
+        }
     }
 
 }

@@ -13,9 +13,7 @@ namespace game {
                                                  sf::Keyboard::Key left, sf::Keyboard::Key right)
     {
         _type = Components::CONTROLLABLE;
-        this->_canMove = 0;
-        this->_direction = 0;
-        this->_lastDirection = 0;
+        this->_isPlaying = true;
         this->up = up;
         this->down = down;
         this->left = left;
@@ -26,36 +24,20 @@ namespace game {
     {
     }
 
-    void ControllableComponent::setDirection(int direction) {
-        this->_direction = direction;
-    }
-
-    void ControllableComponent::setLastDirection(int direction) {
-        this->_lastDirection = direction;
-    }
-
-    void ControllableComponent::setCanMove(int canMove) {
-        this->_canMove = canMove;
-    }
-
     void ControllableComponent::setIsWall(std::array<bool, 4> isWall) {
         this->_isWall = isWall;
     }
 
-    int ControllableComponent::getDirection() const {
-        return this->_direction;
-    }
-
-    int ControllableComponent::getLastDirection() const {
-        return this->_lastDirection;
-    }
-
-    int ControllableComponent::getCanMove() const {
-        return this->_canMove;
+    void ControllableComponent::setIsPlaying(bool isPlaying) {
+        this->_isPlaying = isPlaying;
     }
 
     std::array<bool, 4> ControllableComponent::getIsWall() const {
         return this->_isWall;
+    }
+
+    bool ControllableComponent::getIsPlaying() const {
+        return this->_isPlaying;
     }
 
 }
