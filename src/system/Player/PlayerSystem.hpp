@@ -31,7 +31,7 @@ namespace game {
             std::shared_ptr<std::vector<std::shared_ptr<Entity>>> getEntities() final;
             void addEntity(std::shared_ptr<Entity> &entity) final {};
 
-            void setDirection(ControllableComponent &controllable);
+            void setDirection(ControllableComponent &controllable, VelocityComponent &velocity);
 
             void update() final;
 

@@ -5,7 +5,6 @@
 ** main.cpp
 */
 
-#include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
 #include "Exception.hpp"
@@ -20,6 +19,7 @@
 #include "Rectable/RectableSystem.hpp"
 #include "Hitbox/HitboxSystem.hpp"
 #include "Text/TextSystem.hpp"
+#include "Ghost/GhostSystem.hpp"
 
 int main()
 {
@@ -30,6 +30,7 @@ int main()
     game::Game game(entityManager);
     game.createMap(map.getMap(), map.isWallUp(), map.isWallDown(), map.isWallRight(), map.isWallLeft());
     game.initInfo();
+    entityManager.createGhosts(map.getEnemiesPos());
     entityManager.createPlayer(map.getPlayerPos());
 
     std::shared_ptr<std::vector<sf::Event>> events = std::make_shared<std::vector<sf::Event>>();
@@ -39,14 +40,17 @@ int main()
     game::RectableSystem rectableSystem = game::RectableSystem();
     game::HitboxSystem hitboxSystem = game::HitboxSystem();
     game::TextSystem textSystem = game::TextSystem();
+    game::GhostSystem ghostSystem = game::GhostSystem();
 
     playerSystem.setInputs(events);
+    ghostSystem.setInputs(events);
 
     playerSystem.setEntities(entityManager.getEntities());
     movableSystem.setEntities(entityManager.getEntities());
     rectableSystem.setEntities(entityManager.getEntities());
     hitboxSystem.setEntities(entityManager.getEntities());
     textSystem.setEntities(entityManager.getEntities());
+    ghostSystem.setEntities(entityManager.getEntities());
 
     try {
         while (game.isRunning()) {
@@ -68,6 +72,7 @@ int main()
                     rectableSystem.setEntities(entityManager.getEntities());
                     hitboxSystem.setEntities(entityManager.getEntities());
                     textSystem.setEntities(entityManager.getEntities());
+                    ghostSystem.setEntities(entityManager.getEntities());
                     continue;
                 }
                 events->push_back(event);
@@ -76,6 +81,7 @@ int main()
             rectableSystem.update();
             hitboxSystem.update();
             playerSystem.update();
+            ghostSystem.update();
             movableSystem.update();
             textSystem.update();
             game.draw();

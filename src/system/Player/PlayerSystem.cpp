@@ -21,15 +21,15 @@ namespace game {
         return this->_entities;
     }
 
-    void PlayerSystem::setDirection(ControllableComponent &controllable) {
+    void PlayerSystem::setDirection(ControllableComponent &controllable, VelocityComponent &velocity) {
         if (sf::Keyboard::isKeyPressed(controllable.up)) {
-            !controllable.getIsWall()[1] ? _direction = 1 : 0;
+            !velocity.getIsWall()[1] ? _direction = 1 : 0;
         } else if (sf::Keyboard::isKeyPressed(controllable.down)) {
-            !controllable.getIsWall()[3] ? _direction = 3 : 0;
+            !velocity.getIsWall()[3] ? _direction = 3 : 0;
         } else if (sf::Keyboard::isKeyPressed(controllable.left)) {
-            !controllable.getIsWall()[2] ? _direction = 2 : 0;
+            !velocity.getIsWall()[2] ? _direction = 2 : 0;
         } else if (sf::Keyboard::isKeyPressed(controllable.right)) {
-            !controllable.getIsWall()[0] ? _direction = 0 : 0;
+            !velocity.getIsWall()[0] ? _direction = 0 : 0;
         }
     }
 
@@ -53,9 +53,9 @@ namespace game {
                 }
             }
 
-            setDirection(controllable);
+            setDirection(controllable, velocity);
 
-            if (!controllable.getIsWall()[_direction]) {
+            if (!velocity.getIsWall()[_direction]) {
                 velocity.x = 0;
                 velocity.y = 0;
                 switch (_direction) {

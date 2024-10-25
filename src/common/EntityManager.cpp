@@ -119,6 +119,30 @@ namespace game {
         return playerDeath;
     }
 
+    std::shared_ptr<Entity> EntityManager::createGhosts(const std::array<pos, 4> &ghostPos) {
+        std::vector<std::shared_ptr<Entity>> ghosts;
+        for (int i = 0; i < 4; i++) {
+            std::shared_ptr<Entity> ghost = createEntity();
+            ghosts.push_back(ghost);
+
+            ghost->addComponent<RenderableComponent>(RenderableComponent(SpriteType::GHOST, i));
+            ghost->addComponent<PositionComponent>(PositionComponent(ghostPos[i].x, ghostPos[i].y));
+            ghost->addComponent<RectableComponent>(RectableComponent(0));
+            ghost->addComponent<VelocityComponent>(VelocityComponent(2, 0));
+            ghost->addComponent<GhostComponent>(GhostComponent(i));
+
+            auto &sprite = ghost->getComponent<RenderableComponent>().getSprite();
+            auto &face = ghost->getComponent<RenderableComponent>().getFace();
+            ghost->getComponent<PositionComponent>().positionCallback([&sprite, &face](double x, double y) {
+                sprite.setPosition(static_cast<float>(x), static_cast<float>(y));
+                face.setPosition(static_cast<float>(x), static_cast<float>(y));
+            });
+            ghost->getComponent<PositionComponent>().setPos(ghostPos[i].x, ghostPos[i].y);
+        }
+        return nullptr;
+
+    }
+
     std::shared_ptr<Entity> EntityManager::createWall(const pos &wallPos, sf::IntRect rect) {
         std::shared_ptr<Entity> wall = createEntity();
 

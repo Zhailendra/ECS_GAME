@@ -8,6 +8,8 @@
 #pragma once
 
 #include <iostream>
+#include <array>
+
 #include "AComponent.hpp"
 
 namespace game {
@@ -22,10 +24,14 @@ namespace game {
             explicit VelocityComponent(float x = 0, float y = 0);
             ~VelocityComponent() override = default;
 
+            void setIsWall(std::array<bool, 4> isWall);
+            std::array<bool, 4> getIsWall() const;
+
             float x;
             float y;
             float lastX;
             float lastY;
         private:
+            std::array<bool, 4> _isWall{};
     };
 };

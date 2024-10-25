@@ -11,4 +11,5 @@ enum Components {
     ENERGIZERS = 7,
     DOOR_C = 8,
     TEXT = 9,
+    GHOSTS = 10
 };

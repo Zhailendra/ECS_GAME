@@ -24,6 +24,7 @@
 #include "Energizers/EnergizersComponent.hpp"
 #include "Door/DoorComponent.hpp"
 #include "Text/TextComponent.hpp"
+#include "Ghost/GhostComponent.hpp"
 
 namespace game {
 
@@ -46,6 +47,8 @@ namespace game {
 
             std::shared_ptr<Entity> createPlayer(const pos &playerPos);
             std::shared_ptr<Entity> createPlayerDeath(const pos &playerPos);
+            std::shared_ptr<Entity> createGhosts(const std::array<pos, 4> &ghostPos);
+
             std::shared_ptr<Entity> createWall(const pos &wallPos, sf::IntRect rect);
             std::shared_ptr<Entity> createPellet(const pos &pelletPos, sf::IntRect rect);
             std::shared_ptr<Entity> createEnergizer(const pos &energizerPos, sf::IntRect rect);

@@ -12,17 +12,20 @@
 #define PLAYER_PATH "assets/Pacman.png"
 #define PLAYER_DEATH_PATH "assets/PacmanDeath.png"
 
+#define GHOST_PATH "assets/Ghost.png"
 
 enum SpriteType : std::uint16_t {
     FONT = 0,
     MAP = 1,
     PLAYER = 2,
     PLAYER_DEATH = 3,
+    GHOST = 4
 };
 
 static const std::map<SpriteType, std::string> spritePaths = {
         {FONT, FONT_PATH},
         {MAP, MAP_PATH},
         {PLAYER, PLAYER_PATH},
-        {PLAYER_DEATH, PLAYER_DEATH_PATH}
+        {PLAYER_DEATH, PLAYER_DEATH_PATH},
+        {GHOST, GHOST_PATH}
 };

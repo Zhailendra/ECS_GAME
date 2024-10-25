@@ -23,7 +23,7 @@ namespace game {
 
     void HitboxSystem::update() {
         for (const std::shared_ptr<Entity> &entity : *_entities) {
-            if (entity->hasComponent<RenderableComponent>() && entity->hasComponent<ControllableComponent>()) {
+            if (entity->hasComponent<RenderableComponent>() && entity->hasComponent<VelocityComponent>()) {
                 checkPlayerHitbox(entity);
             }
         }
@@ -63,20 +63,23 @@ namespace game {
         return isWall;
     }
 
-    void HitboxSystem::checkPlayerHitbox(const std::shared_ptr<Entity> &player) {
-        auto &controllable = player->getComponent<ControllableComponent>();
-        auto &playerPos = player->getComponent<PositionComponent>();
+    void HitboxSystem::checkPlayerHitbox(const std::shared_ptr<Entity> &entity) {
+        auto &velo = entity->getComponent<VelocityComponent>();
+        auto &entityPos = entity->getComponent<PositionComponent>();
         std::array<bool, 4> isWall = {false, false, false, false};
 
-        isWall[0] = verifyNextPos(playerPos.x + PLAYER_SPEED, playerPos.y, false);
-        isWall[1] = verifyNextPos(playerPos.x, playerPos.y - PLAYER_SPEED, false);
-        isWall[2] = verifyNextPos(playerPos.x - PLAYER_SPEED, playerPos.y, false);
-        isWall[3] = verifyNextPos(playerPos.x, playerPos.y + PLAYER_SPEED, false);
-        if (verifyNextPos(playerPos.x, playerPos.y, true)) {
-            std::cout << "Energizer eaten" << std::endl;
+        isWall[0] = verifyNextPos(entityPos.x + PLAYER_SPEED, entityPos.y, false);
+        isWall[1] = verifyNextPos(entityPos.x, entityPos.y - PLAYER_SPEED, false);
+        isWall[2] = verifyNextPos(entityPos.x - PLAYER_SPEED, entityPos.y, false);
+        isWall[3] = verifyNextPos(entityPos.x, entityPos.y + PLAYER_SPEED, false);
+
+        if (entity->hasComponent<ControllableComponent>()) {
+            if (verifyNextPos(entityPos.x, entityPos.y, true)) {
+                std::cout << "Energizer eaten" << std::endl;
+            }
         }
 
-        controllable.setIsWall(isWall);
+        velo.setIsWall(isWall);
     }
 
     void HitboxSystem::checker(int x, int y, bool &isWall, bool isPellet) {

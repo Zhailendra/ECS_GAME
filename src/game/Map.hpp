@@ -34,6 +34,7 @@ namespace game {
             std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> setMap();
 
             pos getPlayerPos() const;
+            std::array<pos, 4> getEnemiesPos() const;
 
             bool isWallUp() const;
             bool isWallDown() const;

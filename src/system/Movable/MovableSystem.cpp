@@ -38,6 +38,10 @@ namespace game {
                 auto &pos = entity->getComponent<PositionComponent>();
                 auto &vel = entity->getComponent<VelocityComponent>();
                 pos.setPos(pos.x + vel.x, pos.y + vel.y);
+            } else if (entity->hasComponent<GhostComponent>()){
+                auto &pos = entity->getComponent<PositionComponent>();
+                auto &vel = entity->getComponent<VelocityComponent>();
+                pos.setPos(pos.x + vel.x, pos.y + vel.y);
             }
         }
     }

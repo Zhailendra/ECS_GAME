@@ -19,6 +19,7 @@
 #include "Pellets/PelletsComponent.hpp"
 #include "Energizers/EnergizersComponent.hpp"
 #include "Door/DoorComponent.hpp"
+#include "Ghost/GhostComponent.hpp"
 
 namespace game {
 

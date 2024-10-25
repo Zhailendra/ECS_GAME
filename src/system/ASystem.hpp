@@ -19,6 +19,9 @@ constexpr int PLAYER_ANIM_SPEED = 4;
 constexpr int PLAYER_ANIM_FRAME = 6;
 constexpr int PLAYER_DEATH_FRAME = 12;
 constexpr int PLAYER_SPEED = 2;
+
+constexpr int GHOST_SPEED = 1;
+
 constexpr int SLOW_TIMER = 521;
 
 namespace game {

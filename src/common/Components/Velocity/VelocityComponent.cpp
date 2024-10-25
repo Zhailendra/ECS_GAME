@@ -14,4 +14,12 @@ namespace game {
         _type = Components::VELOCITY;
     }
 
+    void VelocityComponent::setIsWall(std::array<bool, 4> isWall) {
+        _isWall = isWall;
+    }
+
+    std::array<bool, 4> VelocityComponent::getIsWall() const {
+        return _isWall;
+    }
+
 }

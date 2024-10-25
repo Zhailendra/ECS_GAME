@@ -53,6 +53,12 @@ namespace game {
                 if (spriteToDisplay.getTexture() == nullptr)
                     continue;
                 _window.draw(spriteToDisplay);
+                if (entity->hasComponent<GhostComponent>()) {
+                    sf::Sprite faceSprite = entity->getComponent<RenderableComponent>().getFace();
+                    if (faceSprite.getTexture() == nullptr)
+                        continue;
+                    _window.draw(faceSprite);
+                }
             }
         }
 
@@ -220,10 +226,8 @@ namespace game {
             }
         }
 
-        if (nbPellets != 0) {
-            _nbPelletsRemaining = nbPellets;
-        }
-        if (_nbPelletsRemaining == 140 && !_winMenuCreated) {
+        _nbPelletsRemaining = nbPellets;
+        if (_nbPelletsRemaining == 0 && !_winMenuCreated) {
             if (!_playerDeathCreated) {
                 displayWinMenu();
             }

@@ -48,6 +48,16 @@ namespace game {
                     sprite.setTextureRect(sf::IntRect(OBJECT_SIZE * static_cast<int>(rectable.getFrameSpeed()), 0, OBJECT_SIZE, OBJECT_SIZE));
                 }
             }
+            if (entity->hasComponent<GhostComponent>()) {
+                auto &renderable = entity->getComponent<RenderableComponent>();
+                auto &ghost = entity->getComponent<GhostComponent>();
+                auto body_frame = static_cast<unsigned char>(std::floor(static_cast<float>(ghost.getAnimationTimer()) / static_cast<float>(GHOST_ANIMATION_SPEED)));
+                sf::Sprite &sprite = renderable.getSprite();
+                sf::Sprite &face = renderable.getFace();
+
+                sprite.setTextureRect(sf::IntRect(OBJECT_SIZE * body_frame, 0, OBJECT_SIZE, OBJECT_SIZE));
+                face.setTextureRect(sf::IntRect(OBJECT_SIZE * ghost.getDirection(), OBJECT_SIZE, OBJECT_SIZE, OBJECT_SIZE));
+            }
         }
     }
 

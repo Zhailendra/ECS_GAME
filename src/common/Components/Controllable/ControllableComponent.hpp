@@ -24,10 +24,8 @@ namespace game {
             ControllableComponent() { _type = Components::CONTROLLABLE; }
             ~ControllableComponent();
 
-            void setIsWall(std::array<bool, 4> isWall);
             void setIsPlaying(bool isPlaying);
 
-            std::array<bool, 4> getIsWall() const;
             bool getIsPlaying() const;
 
             sf::Keyboard::Key up;
@@ -36,7 +34,6 @@ namespace game {
             sf::Keyboard::Key right;
 
         protected:
-            std::array<bool, 4> _isWall{};
         private:
             bool _isPlaying;
     };

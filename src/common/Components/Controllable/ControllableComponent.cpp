@@ -24,16 +24,8 @@ namespace game {
     {
     }
 
-    void ControllableComponent::setIsWall(std::array<bool, 4> isWall) {
-        this->_isWall = isWall;
-    }
-
     void ControllableComponent::setIsPlaying(bool isPlaying) {
         this->_isPlaying = isPlaying;
-    }
-
-    std::array<bool, 4> ControllableComponent::getIsWall() const {
-        return this->_isWall;
     }
 
     bool ControllableComponent::getIsPlaying() const {

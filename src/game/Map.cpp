@@ -94,6 +94,10 @@ namespace game {
         return _playerPos;
     }
 
+    std::array<pos, 4> Map::getEnemiesPos() const {
+        return _enemiesPos;
+    }
+
     bool Map::isWallUp() const {
         return _isWallUp;
     }
