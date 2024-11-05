@@ -25,7 +25,7 @@ namespace game {
         _entities->push_back(entity);
     }
 
-    void TextSystem::update() {
+    void TextSystem::update(int gameLevel, bool resetGame) {
         for (auto &entity : *_entities) {
             if (!entity->hasComponent<TextComponent>())
                 continue;

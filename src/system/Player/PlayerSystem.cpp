@@ -33,7 +33,10 @@ namespace game {
         }
     }
 
-    void PlayerSystem::update() {
+    void PlayerSystem::update(int gameLevel, bool resetGame) {
+        if (resetGame) {
+            reset(gameLevel);
+        }
         for (auto &entity : *_entities) {
             if (!entity->hasComponent<ControllableComponent>())
                 continue;
@@ -49,7 +52,7 @@ namespace game {
                 if (_animTime < PLAYER_DEATH_FRAME * PLAYER_ANIM_SPEED) {
                     _animTime++;
                 } else {
-                    displayWinText = true;
+                    displayText = true;
                 }
             }
 
@@ -81,12 +84,12 @@ namespace game {
                 velocity.y = 0;
             }
 
-            if (-OBJECT_SIZE >= pos.x) {
-                pos.setPos(OBJECT_SIZE * MAP_WIDTH - PLAYER_SPEED, pos.y);
-            } else if (OBJECT_SIZE * MAP_WIDTH <= pos.x) {
-                pos.setPos(PLAYER_SPEED - OBJECT_SIZE, pos.y);
-            }
         }
+    }
+
+    void PlayerSystem::reset(int gameLevel) {
+        _direction = 0;
+        _animTime = 0;
     }
 
 }

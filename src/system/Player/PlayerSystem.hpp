@@ -33,7 +33,9 @@ namespace game {
 
             void setDirection(ControllableComponent &controllable, VelocityComponent &velocity);
 
-            void update() final;
+            void update(int gameLevel, bool resetGame) final;
+
+            void reset(int gameLevel);
 
         protected:
         private:

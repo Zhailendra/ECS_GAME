@@ -54,7 +54,7 @@ namespace game {
             std::shared_ptr<Entity> createEnergizer(const pos &energizerPos, sf::IntRect rect);
             std::shared_ptr<Entity> createDoor(const pos &doorPos, sf::IntRect rect);
 
-            std::shared_ptr<Entity> createText(const pos &textPos, const std::string &text, const sf::Color &color, unsigned int size, bool display, bool displayNow);
+            std::shared_ptr<Entity> createText(const pos &textPos, const std::string &text, const sf::Color &color, unsigned int size, bool display, bool displayNow, bool isGameOverText);
 
         protected:
         private:

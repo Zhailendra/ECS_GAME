@@ -18,7 +18,7 @@
 
 namespace game {
 
-    extern bool displayWinText;
+    extern bool displayText;
 
     class Entity {
         public:

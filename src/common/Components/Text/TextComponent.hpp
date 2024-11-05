@@ -17,7 +17,7 @@ namespace game {
     class TextComponent : public AComponent {
         public:
             TextComponent();
-            TextComponent(const std::string &string, const sf::Color &color, unsigned int size);
+            TextComponent(const std::string &string, const sf::Color &color, unsigned int size, bool isGameOverText);
             ~TextComponent() = default;
 
             void setIsFontLoaded(bool isFontLoaded);
@@ -30,11 +30,13 @@ namespace game {
             sf::Text &getText();
             bool getDisplay() const;
             bool getDisplayNow() const;
+            bool getIsGameOverText() const;
 
         protected:
             bool _isFontLoaded;
             bool _display;
             bool _displayNow;
+            bool _isGameOverText;
         private:
             sf::Text _text;
             sf::Font _font;

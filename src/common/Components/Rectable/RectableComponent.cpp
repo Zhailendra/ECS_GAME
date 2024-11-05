@@ -36,6 +36,10 @@ namespace game {
         _animFrameSpeed = frameSpeed;
     }
 
+    void RectableComponent::setRect(sf::IntRect rect) {
+        _rect = rect;
+    }
+
     int RectableComponent::getCurrentFrame() const {
         return _currentPlayerFrame;
     }

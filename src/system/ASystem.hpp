@@ -36,7 +36,7 @@ namespace game {
 
             void setInputs(std::shared_ptr<std::vector<sf::Event>> &inputs);
 
-            virtual void update() = 0;
+            virtual void update(int gameLevel, bool resetGame) = 0;
 
         protected:
             std::shared_ptr<std::vector<std::shared_ptr<Entity>>> _entities;

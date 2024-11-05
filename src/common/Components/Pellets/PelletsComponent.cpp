@@ -12,20 +12,12 @@ namespace game {
     PelletsComponent::PelletsComponent()
     {
         _type = Components::PELLETS;
-        _nbPelletsEaten = 0;
+        _isEaten = false;
+        _alreadyConsumed = false;
     }
 
     PelletsComponent::~PelletsComponent()
     {
-    }
-
-    void PelletsComponent::setNbPelletsEaten(bool isEaten) {
-        if (isEaten)
-            _nbPelletsEaten++;
-    }
-
-    int PelletsComponent::getNbPelletsEaten() const {
-        return _nbPelletsEaten;
     }
 
 }

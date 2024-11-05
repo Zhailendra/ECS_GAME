@@ -33,12 +33,16 @@ namespace game {
             void drawHitBox(const std::shared_ptr<Entity>& entity);
 
 
-            void checkPellets();
-            void resetGame(Map map);
+            void checkGameState();
+            void handleWin();
+            void handleGameOver();
 
-            void displayWinMenu();
+            bool resetGame(int &gameLevel, const pos &playerPos, const std::array<pos, 4> &ghostPos);
+            void reDisplayEntities(const pos &playerPos, const std::array<pos, 4> &ghostPos);
 
-            void initInfo();
+            void initPlayerDeath();
+
+            void initInfo(int gameLevel);
 
             sf::RenderWindow &getWindow() { return _window; }
             sf::Event &getEvent() { return _event; }
@@ -60,7 +64,6 @@ namespace game {
             sf::Event _event;
             sf::Clock _clock;
 
-            int _level;
             int _nbPellets;
             int _nbPelletsRemaining;
             int _nbEnergizers;
@@ -73,7 +76,8 @@ namespace game {
             float _fps;
 
             bool _playerDeathCreated;
-            bool _winMenuCreated;
+            bool _gameStopped;
+            bool _isGameOver;
     };
 
 }

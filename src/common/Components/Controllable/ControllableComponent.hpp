@@ -25,8 +25,12 @@ namespace game {
             ~ControllableComponent();
 
             void setIsPlaying(bool isPlaying);
+            void setIsDead(bool isDead);
+            void setEnergyTimer(int energyTimer);
 
             bool getIsPlaying() const;
+            bool getIsDead() const;
+            int getEnergyTimer() const;
 
             sf::Keyboard::Key up;
             sf::Keyboard::Key down;
@@ -36,6 +40,8 @@ namespace game {
         protected:
         private:
             bool _isPlaying;
+            bool _isDead;
+            int _energyTimer;
     };
 
 }

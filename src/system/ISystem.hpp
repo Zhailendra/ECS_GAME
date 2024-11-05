@@ -15,7 +15,7 @@ namespace game {
             ISystem();
             virtual ~ISystem() = 0;
 
-            virtual void update() = 0;
+            virtual void update(int gameLevel, bool resetGame) = 0;
         protected:
         private:
     };

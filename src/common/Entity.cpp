@@ -9,7 +9,7 @@
 
 namespace game {
 
-    bool displayWinText = false;
+    bool displayText = false;
 
     Entity::Entity(std::uint32_t id) : _id(id) {}
 

@@ -27,7 +27,7 @@ namespace game {
         _entities->push_back(entity);
     }
 
-    void MovableSystem::update() {
+    void MovableSystem::update(int gameLevel, bool resetGame) {
         for (auto & entity : *_entities) {
             if (!entity->hasComponent<PositionComponent>() || !entity->hasComponent<VelocityComponent>() || entity->hasComponent<WallsComponent>() || entity->hasComponent<DoorComponent>() || entity->hasComponent<PelletsComponent>() || entity->hasComponent<EnergizersComponent>())
                 continue;

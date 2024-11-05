@@ -18,12 +18,12 @@ namespace game {
         _window.setView(sf::View(sf::FloatRect(0, 0, OBJECT_SIZE * MAP_WIDTH, FONT_SIZE + OBJECT_SIZE * MAP_HEIGHT)));
         _window.setFramerateLimit(60);
         _debugMode = false;
-        _level = 1;
         _nbPellets = 0;
         _nbPelletsRemaining = 0;
         _nbEnergizers = 0;
         _playerDeathCreated = false;
-        _winMenuCreated = false;
+        _gameStopped = false;
+        _isGameOver = false;
     }
 
     Game::~Game() {}
@@ -48,11 +48,16 @@ namespace game {
 
         for (const auto &entity : *_entityManager.getEntities()) {
             if (entity->hasComponent<RenderableComponent>()) {
+                auto &renderable = entity->getComponent<RenderableComponent>();
+                if (!renderable.getDisplayable())
+                    continue;
                 sf::Sprite spriteToDisplay;
                 spriteToDisplay = entity->getComponent<RenderableComponent>().getSprite();
                 if (spriteToDisplay.getTexture() == nullptr)
                     continue;
-                _window.draw(spriteToDisplay);
+                if (renderable.getDisplayBody()) {
+                    _window.draw(spriteToDisplay);
+                }
                 if (entity->hasComponent<GhostComponent>()) {
                     sf::Sprite faceSprite = entity->getComponent<RenderableComponent>().getFace();
                     if (faceSprite.getTexture() == nullptr)
@@ -63,15 +68,21 @@ namespace game {
         }
 
         for (const auto &entity : *_entityManager.getEntities()) {
-            if (_debugMode) {
-                drawHitBox(entity);
-            }
             if (entity->hasComponent<TextComponent>()) {
                 auto &text = entity->getComponent<TextComponent>();
-                if ((text.getDisplay() && text.getDisplayNow() && !_playerDeathCreated) ||
-                    (_winMenuCreated && text.getDisplay()) ||
-                    (_debugMode && !text.getDisplay())) {
+
+                if (text.getDisplay() && text.getDisplayNow() && !_playerDeathCreated) {
                     _window.draw(text.getText());
+                }
+                if (text.getDisplay() && _gameStopped && displayText) {
+                    _window.draw(text.getText());
+                }
+
+                if (_debugMode) {
+                    drawHitBox(entity);
+                    if (!text.getDisplay()) {
+                        _window.draw(text.getText());
+                    }
                 }
             }
         }
@@ -112,6 +123,7 @@ namespace game {
                 }
             }
         }
+        _nbPelletsRemaining = _nbPellets;
     }
 
     void Game::resetWalls(bool &isWallUp, bool &isWallDown, bool &isWallRight, bool &isWallLeft) {
@@ -122,7 +134,7 @@ namespace game {
     }
 
     void Game::drawHitBox(const std::shared_ptr<Entity>& entity) {
-        if (entity->hasComponent<RenderableComponent>() && entity->hasComponent<ControllableComponent>() && !_winMenuCreated) {
+        if (entity->hasComponent<RenderableComponent>() && entity->hasComponent<ControllableComponent>()) {
             auto &renderable = entity->getComponent<RenderableComponent>();
             sf::RectangleShape border;
             border = sf::RectangleShape(sf::Vector2f(renderable.getSprite().getGlobalBounds().width,
@@ -146,29 +158,87 @@ namespace game {
         }
     }
 
-    void Game::resetGame(Map map) {
-        if (_winMenuCreated) {
-            _nbPellets = 0;
-            _nbPelletsRemaining = 0;
-            _nbEnergizers = 0;
+    bool Game::resetGame(int &gameLevel, const pos &playerPos, const std::array<pos, 4> &ghostPos) {
+        if (_playerDeathCreated && displayText) {
+            std::cout << "Resetting game..." << std::endl;
+            _nbPelletsRemaining = _nbPellets;
             _playerDeathCreated = false;
-            _winMenuCreated = false;
-            displayWinText = false;
-            _level++;
-            auto &text = _levelInfo->getComponent<TextComponent>();
-            text.setStringText("LEVEL: " + std::to_string(_level));
-            _entityManager.clearEntities();
-            createMap(map.getMap(), map.isWallUp(), map.isWallDown(), map.isWallRight(), map.isWallLeft());
-            _entityManager.createPlayer(map.getPlayerPos());
+            _gameStopped = false;
+            displayText = false;
+            if (!_isGameOver) {
+                gameLevel++;
+                auto &text = _levelInfo->getComponent<TextComponent>();
+                text.setStringText("LEVEL: " + std::to_string((gameLevel + 1)));
+            } else {
+                gameLevel = 0;
+                auto &text = _levelInfo->getComponent<TextComponent>();
+                text.setStringText("LEVEL: " + std::to_string((gameLevel + 1)));
+                _isGameOver = false;
+            }
+            for (const auto &entity : *_entityManager.getEntities()) {
+                if (entity->hasComponent<RenderableComponent>()) {
+                    auto &renderable = entity->getComponent<RenderableComponent>();
+                    if (renderable.getDisplayable() && renderable.getSpriteType() == PLAYER_DEATH) {
+                        EntityManager::destroyEntity(_entityManager.getEntities(), entity->getId());
+                        break;
+                    }
+                }
+            }
+            reDisplayEntities(playerPos, ghostPos);
+            return true;
+        }
+        return false;
+    }
+
+    void Game::reDisplayEntities(const pos &playerPos, const std::array<pos, 4> &ghostPos) {
+        for (const auto &entity : *_entityManager.getEntities()) {
+            if (entity->hasComponent<RenderableComponent>()) {
+                auto &renderable = entity->getComponent<RenderableComponent>();
+                if (!renderable.getDisplayable()) {
+                    renderable.setDisplayable(true);
+                }
+            }
+            if (entity->hasComponent<GhostComponent>()) {
+                auto &ghost = entity->getComponent<GhostComponent>();
+                auto &renderable = entity->getComponent<RenderableComponent>();
+                auto &sprite = renderable.getSprite();
+                auto &face = renderable.getFace();
+                auto &position = entity->getComponent<PositionComponent>();
+
+                position.positionCallback([&sprite, &face](double x, double y) {
+                    sprite.setPosition(static_cast<float>(x), static_cast<float>(y));
+                    face.setPosition(static_cast<float>(x), static_cast<float>(y));
+                });
+                position.setPos(ghostPos[ghost.getGhostId()].x, ghostPos[ghost.getGhostId()].y);
+            }
+            if (entity->hasComponent<ControllableComponent>()) {
+                auto &controllable = entity->getComponent<ControllableComponent>();
+                auto &position = entity->getComponent<PositionComponent>();
+                controllable.setIsPlaying(true);
+                controllable.setIsDead(false);
+                position.setPos(playerPos.x, playerPos.y);
+            }
+            if (entity->hasComponent<PelletsComponent>()) {
+                auto &pellet = entity->getComponent<PelletsComponent>();
+                if (pellet.getIsEaten()) {
+                    pellet.setIsEaten(false);
+                    pellet.setAlreadyConsumed(false);
+                }
+            } else if (entity->hasComponent<EnergizersComponent>()) {
+                auto &energizer = entity->getComponent<EnergizersComponent>();
+                if (energizer.getIsEaten()) {
+                    energizer.setIsEaten(false);
+                    energizer.setAlreadyConsumed(false);
+                }
+            }
         }
     }
 
-    void Game::displayWinMenu() {
-        std::vector<std::shared_ptr<Entity>> toRemove;
-
+    void Game::initPlayerDeath() {
         for (const auto &entity : *_entityManager.getEntities()) {
-            if (entity->hasComponent<TextComponent>()) {
-                continue;
+            if (entity->hasComponent<RenderableComponent>()) {
+                auto &renderable = entity->getComponent<RenderableComponent>();
+                renderable.setDisplayable(false);
             }
             if (entity->hasComponent<RenderableComponent>() &&
                 entity->hasComponent<ControllableComponent>() &&
@@ -182,17 +252,10 @@ namespace game {
                     _playerDeathCreated = true;
                 }
             }
-            toRemove.push_back(entity);
-        }
-
-        for (const auto &entity : toRemove) {
-            if (entity->hasComponent<RenderableComponent>()) {
-                EntityManager::destroyEntity(_entityManager.getEntities(), entity->getId());
-            }
         }
     }
 
-    void Game::initInfo() {
+    void Game::initInfo(int gameLevel) {
         std::string toDisplay = "\t\t\t\tYou won!\n\nPress Enter to play again\n\t\t\t\t\t  or\n\t\t  Escape to quit";
         sf::Vector2u windowSize = _window.getSize();
         double x = 50;
@@ -203,10 +266,10 @@ namespace game {
         pos messagePos = {x, y};
         pos levelPos = {static_cast<double>(windowSize.x - 670), 335};
 
-        _fpsEntity = _entityManager.createText(fpsPos, "", sf::Color::White, 15, false, false);
-        _nbEntities = _entityManager.createText(nbEntitiesPos, "", sf::Color::White, 15, false, false);
-        _winMenu = _entityManager.createText(messagePos, toDisplay, sf::Color::White, 15, true, false);
-        _levelInfo = _entityManager.createText(levelPos, "LEVEL: " + std::to_string(_level), sf::Color::White, 15, true, true);
+        _fpsEntity = _entityManager.createText(fpsPos, "", sf::Color::White, 15, false, false, false);
+        _nbEntities = _entityManager.createText(nbEntitiesPos, "", sf::Color::White, 15, false, false, false);
+        _winMenu = _entityManager.createText(messagePos, toDisplay, sf::Color::White, 15, true, false, true);
+        _levelInfo = _entityManager.createText(levelPos, "LEVEL: " + std::to_string(gameLevel + 1), sf::Color::White, 15, true, true, false);
 
         if (_fpsEntity && _nbEntities && _winMenu && _levelInfo) {
             _entityManager.getEntities()->push_back(_fpsEntity);
@@ -218,23 +281,44 @@ namespace game {
         }
     }
 
-    void Game::checkPellets() {
-        int nbPellets = 0;
+    void Game::checkGameState() {
+        bool isGameOver = false;
+
         for (const auto &entity : *_entityManager.getEntities()) {
             if (entity->hasComponent<PelletsComponent>()) {
-                nbPellets++;
+                auto &pellets = entity->getComponent<PelletsComponent>();
+
+                if (pellets.getIsEaten() && !pellets.isAlreadyConsumed()) {
+                    _nbPelletsRemaining--;
+                    pellets.setAlreadyConsumed(true);
+                }
+            }
+            if (entity->hasComponent<ControllableComponent>()) {
+                auto &controllable = entity->getComponent<ControllableComponent>();
+                isGameOver = controllable.getIsDead();
             }
         }
 
-        _nbPelletsRemaining = nbPellets;
-        if (_nbPelletsRemaining == 0 && !_winMenuCreated) {
-            if (!_playerDeathCreated) {
-                displayWinMenu();
-            }
-            if (displayWinText) {
-                _winMenuCreated = true;
-            }
+        if (_nbPelletsRemaining <= 0 && !_playerDeathCreated) {
+            handleWin();
+        } else if (isGameOver && !_playerDeathCreated) {
+            handleGameOver();
         }
+    }
+
+    void Game::handleWin() {
+        initPlayerDeath();
+        _gameStopped = true;
+        _winMenu->getComponent<TextComponent>().setStringText("\t\t\t\tYou won!\n\nPress Enter to play again\n\t\t\t\t\t  or\n\t\t  Escape to quit");
+        std::cout << "Victoire ! Tous les pellets ont été mangés." << std::endl;
+    }
+
+    void Game::handleGameOver() {
+        initPlayerDeath();
+        _gameStopped = true;
+        _isGameOver = true;
+        _winMenu->getComponent<TextComponent>().setStringText("\t\t\t\tGame Over\n\nPress Enter to play again\n\t\t\t\t\t  or\n\t\t  Escape to quit");
+        std::cout << "Défaite ! Le joueur est mort." << std::endl;
     }
 
 }

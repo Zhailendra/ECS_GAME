@@ -19,13 +19,15 @@ namespace game {
             PelletsComponent();
             ~PelletsComponent();
 
-            int getNbPelletsEaten() const;
+            bool getIsEaten() const { return _isEaten; }
+            void setIsEaten(bool eaten) { _isEaten = eaten; }
 
-            void setNbPelletsEaten(bool isEaten);
+            bool isAlreadyConsumed() const { return _alreadyConsumed; }
+            void setAlreadyConsumed(bool consumed) { _alreadyConsumed = consumed; }
 
-        protected:
         private:
-            int _nbPelletsEaten;
+            bool _isEaten;
+            bool _alreadyConsumed;
     };
 
 }

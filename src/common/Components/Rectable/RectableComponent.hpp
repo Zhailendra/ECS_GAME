@@ -25,6 +25,7 @@ namespace game {
 
             void setDirection(int direction);
             void setFrameSpeed(float frameSpeed);
+            void setRect(sf::IntRect rect);
 
             int getCurrentFrame() const;
             float getFrameSpeed() const;

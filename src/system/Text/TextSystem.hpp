@@ -23,7 +23,7 @@ namespace game {
 
             std::shared_ptr<std::vector<std::shared_ptr<Entity>>> getEntities() override;
             void addEntity(std::shared_ptr<Entity> &entity) final;
-            void update() final;
+            void update(int gameLevel, bool resetGame) final;
 
         protected:
         private:

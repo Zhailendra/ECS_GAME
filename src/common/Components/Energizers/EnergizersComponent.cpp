@@ -12,19 +12,12 @@ namespace game {
     EnergizersComponent::EnergizersComponent()
     {
         _type = Components::ENERGIZERS;
+        _isEaten = false;
+        _alreadyConsumed = false;
     }
 
     EnergizersComponent::~EnergizersComponent()
     {
-    }
-
-    int EnergizersComponent::getNbEnergizersEaten() const {
-        return _nbEnergizersEaten;
-    }
-
-    void EnergizersComponent::setNbEnergizersEaten(bool isEaten) {
-        if (isEaten)
-            _nbEnergizersEaten++;
     }
 
 }

@@ -30,12 +30,13 @@ namespace game {
 
             std::shared_ptr<std::vector<std::shared_ptr<Entity>>> getEntities() final;
             void addEntity(std::shared_ptr<Entity> &entity) final;
-            void update() final;
+            void update(int gameLevel, bool resetGame) final;
 
-            void checkPlayerHitbox(const std::shared_ptr<Entity> &entity);
-            void checker(int x, int y, bool &isWall, bool isPellet);
+            void checkPlayerHitbox(const std::shared_ptr<Entity> &entity, int gameLevel);
+            void checker(int x, int y, bool &isWall, bool isPellet, bool useDoor);
+            void checkIfPlayerHitGhost(double x, double y, ControllableComponent &player);
 
-            bool verifyNextPos(double x, double y, bool isPellet);
+            bool verifyNextPos(double x, double y, bool isPellet, bool useDoor);
 
         protected:
         private:

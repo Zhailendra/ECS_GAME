@@ -86,7 +86,7 @@ namespace game {
         std::shared_ptr<Entity> player = createEntity();
 
         player->addComponent<PositionComponent>(PositionComponent(playerPos.x, playerPos.y));
-        player->addComponent<RenderableComponent>(RenderableComponent(SpriteType::PLAYER));
+        player->addComponent<RenderableComponent>(RenderableComponent(SpriteType::PLAYER, false));
         player->addComponent<VelocityComponent>(VelocityComponent(2, 0));
         player->addComponent<RectableComponent>(RectableComponent(0));
         player->addComponent<ControllableComponent>(ControllableComponent(sf::Keyboard::Up,
@@ -105,7 +105,7 @@ namespace game {
         std::shared_ptr<Entity> playerDeath = createEntity();
 
         playerDeath->addComponent<PositionComponent>(PositionComponent(playerPos.x, playerPos.y));
-        playerDeath->addComponent<RenderableComponent>(RenderableComponent(SpriteType::PLAYER_DEATH));
+        playerDeath->addComponent<RenderableComponent>(RenderableComponent(SpriteType::PLAYER_DEATH, false));
         playerDeath->addComponent<VelocityComponent>(VelocityComponent(0, 0));
         playerDeath->addComponent<RectableComponent>(RectableComponent(0));
         playerDeath->addComponent<ControllableComponent>(ControllableComponent());
@@ -125,12 +125,13 @@ namespace game {
             std::shared_ptr<Entity> ghost = createEntity();
             ghosts.push_back(ghost);
 
-            ghost->addComponent<RenderableComponent>(RenderableComponent(SpriteType::GHOST, i));
+            ghost->addComponent<RenderableComponent>(RenderableComponent(SpriteType::GHOST, true));
             ghost->addComponent<PositionComponent>(PositionComponent(ghostPos[i].x, ghostPos[i].y));
             ghost->addComponent<RectableComponent>(RectableComponent(0));
-            ghost->addComponent<VelocityComponent>(VelocityComponent(2, 0));
-            ghost->addComponent<GhostComponent>(GhostComponent(i));
+            ghost->addComponent<VelocityComponent>(VelocityComponent(1, 0));
+            ghost->addComponent<GhostComponent>(GhostComponent(i, ghostPos[2], ghostPos[0]));
 
+            ghost->getComponent<RenderableComponent>().changeDisplayMode(i);
             auto &sprite = ghost->getComponent<RenderableComponent>().getSprite();
             auto &face = ghost->getComponent<RenderableComponent>().getFace();
             ghost->getComponent<PositionComponent>().positionCallback([&sprite, &face](double x, double y) {
@@ -147,7 +148,7 @@ namespace game {
         std::shared_ptr<Entity> wall = createEntity();
 
         wall->addComponent<PositionComponent>(PositionComponent(wallPos.x, wallPos.y));
-        wall->addComponent<RenderableComponent>(RenderableComponent(SpriteType::MAP));
+        wall->addComponent<RenderableComponent>(RenderableComponent(SpriteType::MAP, false));
         wall->addComponent<WallsComponent>(WallsComponent());
         wall->addComponent<RectableComponent>(RectableComponent(rect));
 
@@ -165,7 +166,7 @@ namespace game {
         std::shared_ptr<Entity> pellet = createEntity();
 
         pellet->addComponent<PositionComponent>(PositionComponent(pelletPos.x, pelletPos.y));
-        pellet->addComponent<RenderableComponent>(RenderableComponent(SpriteType::MAP));
+        pellet->addComponent<RenderableComponent>(RenderableComponent(SpriteType::MAP, false));
         pellet->addComponent<RectableComponent>(RectableComponent(rect));
         pellet->addComponent<PelletsComponent>(PelletsComponent());
 
@@ -183,7 +184,7 @@ namespace game {
         std::shared_ptr<Entity> energizer = createEntity();
 
         energizer->addComponent<PositionComponent>(PositionComponent(energizerPos.x, energizerPos.y));
-        energizer->addComponent<RenderableComponent>(RenderableComponent(SpriteType::MAP));
+        energizer->addComponent<RenderableComponent>(RenderableComponent(SpriteType::MAP, false));
         energizer->addComponent<RectableComponent>(RectableComponent(rect));
         energizer->addComponent<EnergizersComponent>(EnergizersComponent());
 
@@ -201,7 +202,7 @@ namespace game {
         std::shared_ptr<Entity> door = createEntity();
 
         door->addComponent<PositionComponent>(PositionComponent(doorPos.x, doorPos.y));
-        door->addComponent<RenderableComponent>(RenderableComponent(SpriteType::MAP));
+        door->addComponent<RenderableComponent>(RenderableComponent(SpriteType::MAP, false));
         door->addComponent<RectableComponent>(RectableComponent(rect));
         door->addComponent<DoorComponent>(DoorComponent());
 
@@ -215,13 +216,13 @@ namespace game {
         return door;
     }
 
-    std::shared_ptr<Entity> EntityManager::createText(const pos &textPos, const std::string &text, const sf::Color &color, unsigned int size, bool display, bool displayNow) {
+    std::shared_ptr<Entity> EntityManager::createText(const pos &textPos, const std::string &text, const sf::Color &color, unsigned int size, bool display, bool displayNow, bool isGameOverText) {
         std::random_device rd;
         std::mt19937 gen(rd());
         auto distribution = std::uniform_int_distribution<std::uint32_t>(0, std::numeric_limits<std::uint32_t>::max());
         std::shared_ptr<Entity> textEntity = std::make_shared<Entity>(Entity(distribution(gen)));
 
-        textEntity->addComponent(TextComponent(text, color, size));
+        textEntity->addComponent(TextComponent(text, color, size, isGameOverText));
         textEntity->addComponent<PositionComponent>(PositionComponent(textPos.x, textPos.y));
         textEntity->getComponent<TextComponent>().setDisplay(display);
         textEntity->getComponent<TextComponent>().setDisplayNow(displayNow);

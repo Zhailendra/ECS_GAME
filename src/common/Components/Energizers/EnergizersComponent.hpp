@@ -19,13 +19,15 @@ namespace game {
             EnergizersComponent();
             ~EnergizersComponent();
 
-            int getNbEnergizersEaten() const;
+            bool getIsEaten() const { return _isEaten; }
+            void setIsEaten(bool eaten) { _isEaten = eaten; }
 
-            void setNbEnergizersEaten(bool isEaten);
+            bool isAlreadyConsumed() const { return _alreadyConsumed; }
+            void setAlreadyConsumed(bool consumed) { _alreadyConsumed = consumed; }
 
-        protected:
         private:
-            int _nbEnergizersEaten;
+            bool _isEaten;
+            bool _alreadyConsumed;
     };
 
 }

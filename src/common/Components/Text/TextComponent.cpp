@@ -13,12 +13,13 @@ namespace game {
         _type = Components::TEXT;
     }
 
-    TextComponent::TextComponent(const std::string &text, const sf::Color &color, unsigned int size) {
+    TextComponent::TextComponent(const std::string &text, const sf::Color &color, unsigned int size, bool isGameOverText) {
         _type = Components::TEXT;
         _text.setString(text);
         _string = text;
         _text.setFillColor(color);
         _text.setCharacterSize(size);
+        _isGameOverText = isGameOverText;
     }
 
     void TextComponent::setIsFontLoaded(bool isFontLoaded) {
@@ -57,4 +58,7 @@ namespace game {
         return _displayNow;
     }
 
+    bool TextComponent::getIsGameOverText() const {
+        return _isGameOverText;
+    }
 }
