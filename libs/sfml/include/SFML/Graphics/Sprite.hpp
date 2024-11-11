@@ -227,10 +227,10 @@ private:
 
 
 ////////////////////////////////////////////////////////////
-/// \class sf::Utils
+/// \class sf::Sprite
 /// \ingroup graphics
 ///
-/// sf::Utils is a drawable class that allows to easily display
+/// sf::Sprite is a drawable class that allows to easily display
 /// a texture (or a part of it) on a render target.
 ///
 /// It inherits all the functions from sf::Transformable:
@@ -239,20 +239,20 @@ private:
 /// and some convenience functions to change the overall color of the
 /// sprite, or to get its bounding rectangle.
 ///
-/// sf::Utils works in combination with the sf::Texture class, which
+/// sf::Sprite works in combination with the sf::Texture class, which
 /// loads and provides the pixel data of a given texture.
 ///
-/// The separation of sf::Utils and sf::Texture allows more flexibility
+/// The separation of sf::Sprite and sf::Texture allows more flexibility
 /// and better performances: indeed a sf::Texture is a heavy resource,
 /// and any operation on it is slow (often too slow for real-time
-/// applications). On the other side, a sf::Utils is a lightweight
+/// applications). On the other side, a sf::Sprite is a lightweight
 /// object which can use the pixel data of a sf::Texture and draw
 /// it with its own transformation/color/blending attributes.
 ///
-/// It is important to note that the sf::Utils instance doesn't
+/// It is important to note that the sf::Sprite instance doesn't
 /// copy the texture that it uses, it only keeps a reference to it.
 /// Thus, a sf::Texture must not be destroyed while it is
-/// used by a sf::Utils (i.e. never write a function that
+/// used by a sf::Sprite (i.e. never write a function that
 /// uses a local sf::Texture instance for creating a sprite).
 ///
 /// See also the note on coordinates and undistorted rendering in sf::Transformable.
@@ -264,7 +264,7 @@ private:
 /// texture.loadFromFile("texture.png");
 ///
 /// // Create a sprite
-/// sf::Utils sprite;
+/// sf::Sprite sprite;
 /// sprite.setTexture(texture);
 /// sprite.setTextureRect(sf::IntRect(10, 10, 50, 30));
 /// sprite.setColor(sf::Color(255, 255, 255, 200));

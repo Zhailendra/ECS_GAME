@@ -684,7 +684,7 @@ private:
 ///     return -1;
 ///
 /// // Assign it to a sprite
-/// sf::Utils sprite;
+/// sf::Sprite sprite;
 /// sprite.setTexture(texture);
 ///
 /// // Draw the textured sprite
@@ -701,7 +701,7 @@ private:
 ///     return -1;
 ///
 /// // Create a sprite that will display the texture
-/// sf::Utils sprite(texture);
+/// sf::Sprite sprite(texture);
 ///
 /// while (...) // the main loop
 /// {
@@ -728,6 +728,6 @@ private:
 /// sf::Texture::bind(NULL);
 /// \endcode
 ///
-/// \see sf::Utils, sf::Image, sf::RenderTexture
+/// \see sf::Sprite, sf::Image, sf::RenderTexture
 ///
 ////////////////////////////////////////////////////////////

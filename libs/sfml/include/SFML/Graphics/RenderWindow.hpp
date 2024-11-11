@@ -262,7 +262,7 @@ private:
 /// sf::RenderWindow window(sf::VideoMode(800, 600), "SFML OpenGL");
 ///
 /// // Create a sprite and a text to display
-/// sf::Utils sprite;
+/// sf::Sprite sprite;
 /// sf::Text text;
 /// ...
 ///

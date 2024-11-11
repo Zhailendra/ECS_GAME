@@ -297,7 +297,7 @@ private:
 ///    texture.clear(sf::Color::Red);
 ///
 ///    // Draw stuff to the texture
-///    texture.draw(sprite);  // sprite is a sf::Utils
+///    texture.draw(sprite);  // sprite is a sf::Sprite
 ///    texture.draw(shape);   // shape is a sf::Shape
 ///    texture.draw(text);    // text is a sf::Text
 ///
@@ -308,7 +308,7 @@ private:
 ///    window.clear();
 ///
 ///    // Draw the texture
-///    sf::Utils sprite(texture.getTexture());
+///    sf::Sprite sprite(texture.getTexture());
 ///    window.draw(sprite);
 ///
 ///    // End the current frame and display its contents on screen

@@ -115,7 +115,7 @@ protected:
 ///         glEnd();
 ///     }
 ///
-///     sf::Utils m_sprite;
+///     sf::Sprite m_sprite;
 ///     sf::Texture m_texture;
 ///     sf::VertexArray m_vertices;
 /// };

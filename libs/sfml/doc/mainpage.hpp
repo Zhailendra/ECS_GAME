@@ -24,7 +24,7 @@
 ///     sf::Texture texture;
 ///     if (!texture.loadFromFile("cute_image.jpg"))
 ///         return EXIT_FAILURE;
-///     sf::Utils sprite(texture);
+///     sf::Sprite sprite(texture);
 ///
 ///     // Create a graphical text to display
 ///     sf::Font font;

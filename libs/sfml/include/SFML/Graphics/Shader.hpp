@@ -838,7 +838,7 @@ private:
 /// be null (which means "no shader").
 ///
 /// Shaders can be used on any drawable, but some combinations are
-/// not interesting. For example, using a vertex shader on a sf::Utils
+/// not interesting. For example, using a vertex shader on a sf::Sprite
 /// is limited because there are only 4 vertices, the sprite would
 /// have to be subdivided in order to apply wave effects.
 /// Another bad example is a fragment shader with sf::Text: the texture
